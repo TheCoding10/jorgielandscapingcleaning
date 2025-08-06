@@ -78,12 +78,30 @@
             margin-top: 80px;
         }
 
+        /* Page Transitions */
         .page {
             display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
         .page.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: pageSlideIn 0.5s ease-out;
+        }
+
+        @keyframes pageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Hero Section */
@@ -480,7 +498,7 @@
             <ul class="nav-links" id="navLinks">
                 <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
                 <li><a href="#" onclick="showPage('about')">About</a></li>
-                <li><a href="services.html">Services</a></li>
+                <li><a href="#" onclick="showPage('services')">Services</a></li>
                 <li><a href="#" onclick="showPage('gallery')">Gallery</a></li>
                 <li><a href="#" onclick="showPage('testimonials')">Testimonials</a></li>
                 <li><a href="#" onclick="showPage('contact')">Contact</a></li>
@@ -806,5 +824,49 @@
 
     <script>
         function showPage(pageId) {
-            // Hide all pages
-            const pages =
+            // Remove active class from all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Add active class to selected page with a small delay for smooth transition
+            setTimeout(() => {
+                const selectedPage = document.getElementById(pageId);
+                if (selectedPage) {
+                    selectedPage.classList.add('active');
+                }
+            }, 50);
+
+            // Update active navigation link
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Find and activate the corresponding nav link
+            const activeLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure home page is active on load
+            showPage('home');
+        });
+    </script>
